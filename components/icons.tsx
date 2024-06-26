@@ -1,21 +1,20 @@
-export function UsersIcon(props: React.SVGProps<SVGSVGElement>) {
+export function BoltIcon(props: React.SVGProps<SVGSVGElement>) {
   return (
     <svg
       {...props}
       xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"
-      strokeWidth="2"
       strokeLinecap="round"
       strokeLinejoin="round"
+      viewBox="0 0 24 24"
+      strokeWidth="1.5"
     >
-      <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
-      <circle cx="9" cy="7" r="4" />
-      <path d="M22 21v-2a4 4 0 0 0-3-3.87" />
-      <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        d="m3.75 13.5 10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75Z"
+      />
     </svg>
   );
 }
@@ -108,19 +107,22 @@ export function Logo() {
   );
 }
 
-export function VercelLogo(props: React.SVGProps<SVGSVGElement>) {
+export function LinkOutIcon(props: React.SVGProps<SVGSVGElement>) {
   return (
     <svg
-      {...props}
-      aria-label="Vercel logomark"
+      xmlns="http://www.w3.org/2000/svg"
+      fill="none"
+      viewBox="0 0 24 24"
       height="64"
-      role="img"
-      viewBox="0 0 74 64"
+      strokeWidth="1.5"
+      stroke="currentColor"
+      {...props}
     >
       <path
-        d="M37.5896 0.25L74.5396 64.25H0.639648L37.5896 0.25Z"
-        fill="currentColor"
-      ></path>
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        d="m4.5 19.5 15-15m0 0H8.25m11.25 0v11.25"
+      />
     </svg>
   );
 }

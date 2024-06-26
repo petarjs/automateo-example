@@ -1,9 +1,9 @@
 import 'server-only';
 
 import { neon } from '@neondatabase/serverless';
+import { desc, eq, ilike } from 'drizzle-orm';
 import { drizzle } from 'drizzle-orm/neon-http';
-import { pgTable, serial, varchar } from 'drizzle-orm/pg-core';
-import { eq, ilike } from 'drizzle-orm';
+import { pgTable, serial, text, timestamp, varchar } from 'drizzle-orm/pg-core';
 
 export const db = drizzle(
   neon(process.env.POSTGRES_URL!, {
@@ -13,43 +13,63 @@ export const db = drizzle(
   })
 );
 
-const users = pgTable('users', {
+const ideas = pgTable('ideas', {
   id: serial('id').primaryKey(),
-  name: varchar('name', { length: 50 }),
-  username: varchar('username', { length: 50 }),
-  email: varchar('email', { length: 50 })
+  idea: text('idea').notNull(),
+  idea_analysis: text('idea_analysis'),
+  workflow_id: varchar('workflow_id', { length: 36 }),
+  workflow_execution_id: varchar('workflow_execution_id', { length: 36 }),
+  created_at: timestamp('created_at').notNull()
 });
 
-export type SelectUser = typeof users.$inferSelect;
+export type SelectIdea = typeof ideas.$inferSelect;
 
-export async function getUsers(
-  search: string,
-  offset: number
-): Promise<{
-  users: SelectUser[];
+export async function getIdeas(): Promise<{
+  ideas: SelectIdea[];
   newOffset: number | null;
 }> {
-  // Always search the full table, not per page
-  if (search) {
-    return {
-      users: await db
-        .select()
-        .from(users)
-        .where(ilike(users.name, `%${search}%`))
-        .limit(1000),
-      newOffset: null
-    };
-  }
-
-  if (offset === null) {
-    return { users: [], newOffset: null };
-  }
-
-  const moreUsers = await db.select().from(users).limit(20).offset(offset);
-  const newOffset = moreUsers.length >= 20 ? offset + 20 : null;
-  return { users: moreUsers, newOffset };
+  return {
+    ideas: await db
+      .select()
+      .from(ideas)
+      .orderBy(desc(ideas.created_at))
+      .limit(100),
+    newOffset: null
+  };
 }
 
-export async function deleteUserById(id: number) {
-  await db.delete(users).where(eq(users.id, id));
+export async function createIdea(formData: FormData) {
+  return db
+    .insert(ideas)
+    .values({
+      idea: formData.get('idea') as string,
+      created_at: new Date()
+    })
+    .returning({ insertedId: ideas.id });
+}
+
+export async function getIdea(id: number) {
+  const selectedIdeas = await db
+    .select()
+    .from(ideas)
+    .where(eq(ideas.id, id))
+    .execute();
+
+  return selectedIdeas[0];
+}
+
+export async function updateIdea(id: number, data: Partial<SelectIdea>) {
+  return db.update(ideas).set(data).where(eq(ideas.id, id)).execute();
+}
+
+export async function getIdeaByWorkflowExecutionId(
+  workflowExecutionId: string
+) {
+  const selectedIdeas = await db
+    .select()
+    .from(ideas)
+    .where(eq(ideas.workflow_execution_id, workflowExecutionId))
+    .execute();
+
+  return selectedIdeas[0];
 }

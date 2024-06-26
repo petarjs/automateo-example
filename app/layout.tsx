@@ -1,22 +1,25 @@
 import './globals.css';
 
-import Link from 'next/link';
+import { Logo } from '@/components/icons';
+import { getIdeas } from '@/lib/db';
 import { Analytics } from '@vercel/analytics/react';
-import { Logo, SettingsIcon, UsersIcon, VercelLogo } from '@/components/icons';
+import Link from 'next/link';
+import { Nav } from './nav';
 import { User } from './user';
-import { NavItem } from './nav-item';
 
 export const metadata = {
-  title: 'Next.js App Router + NextAuth + Tailwind CSS',
+  title: 'Public Directory of Startup Ideas - Automateo Example',
   description:
-    'A user admin dashboard configured with Next.js, Postgres, NextAuth, Tailwind CSS, TypeScript, and Prettier.'
+    'A public directory of startup ideas to help you get inspired and start building. Created by Automateo.app.'
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children
 }: {
   children: React.ReactNode;
 }) {
+  const { ideas, newOffset } = await getIdeas();
+
   return (
     <html lang="en" className="h-full bg-gray-50">
       <body>
@@ -28,25 +31,11 @@ export default function RootLayout({
                   className="flex items-center gap-2 font-semibold"
                   href="/"
                 >
-                  <Logo />
-                  <span className="">ACME</span>
+                  <span className="">Automateo Example</span>
                 </Link>
               </div>
               <div className="flex-1 overflow-auto py-2">
-                <nav className="grid items-start px-4 text-sm font-medium">
-                  <NavItem href="/">
-                    <UsersIcon className="h-4 w-4" />
-                    Users
-                  </NavItem>
-                  <NavItem href="/settings">
-                    <SettingsIcon className="h-4 w-4" />
-                    Settings
-                  </NavItem>
-                  <NavItem href="https://vercel.com/templates/next.js/admin-dashboard-tailwind-postgres-react-nextjs">
-                    <VercelLogo className="h-4 w-4" />
-                    Deploy
-                  </NavItem>
-                </nav>
+                <Nav ideas={ideas} />
               </div>
             </div>
           </div>
@@ -57,7 +46,7 @@ export default function RootLayout({
                 href="/"
               >
                 <Logo />
-                <span className="">ACME</span>
+                <span className="">Automateo Example</span>
               </Link>
               <User />
             </header>

@@ -9,15 +9,15 @@ import {
   Table
 } from '@/components/ui/table';
 import { Button } from '@/components/ui/button';
-import { SelectUser } from '@/lib/db';
-import { deleteUser } from './actions';
-import { useRouter } from 'next/navigation';
 
-export function UsersTable({
-  users,
+import { useRouter } from 'next/navigation';
+import { SelectIdea } from '@/lib/db';
+
+export function IdeasTable({
+  ideas,
   offset
 }: {
-  users: SelectUser[];
+  ideas: SelectIdea[];
   offset: number | null;
 }) {
   const router = useRouter();
@@ -32,15 +32,14 @@ export function UsersTable({
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead className="max-w-[150px]">Name</TableHead>
-              <TableHead className="hidden md:table-cell">Email</TableHead>
-              <TableHead className="hidden md:table-cell">Username</TableHead>
+              <TableHead className="">Idea</TableHead>
+              <TableHead className="">Idea Analysis</TableHead>
               <TableHead></TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
-            {users.map((user) => (
-              <UserRow key={user.id} user={user} />
+            {ideas.map((idea) => (
+              <IdeaRow key={idea.id} idea={idea} />
             ))}
           </TableBody>
         </Table>
@@ -58,25 +57,12 @@ export function UsersTable({
   );
 }
 
-function UserRow({ user }: { user: SelectUser }) {
-  const userId = user.id;
-  const deleteUserWithId = deleteUser.bind(null, userId);
-
+function IdeaRow({ idea }: { idea: SelectIdea }) {
   return (
     <TableRow>
-      <TableCell className="font-medium">{user.name}</TableCell>
-      <TableCell className="hidden md:table-cell">{user.email}</TableCell>
-      <TableCell>{user.username}</TableCell>
-      <TableCell>
-        <Button
-          className="w-full"
-          size="sm"
-          variant="outline"
-          formAction={deleteUserWithId}
-          disabled
-        >
-          Delete
-        </Button>
+      <TableCell className="font-medium">{idea.idea}</TableCell>
+      <TableCell className="hidden md:table-cell">
+        {idea.idea_analysis}
       </TableCell>
     </TableRow>
   );
