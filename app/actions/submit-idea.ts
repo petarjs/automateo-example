@@ -17,6 +17,9 @@ export async function submitIdea(formData: FormData) {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${process.env.AUTOMATEO_API_KEY}`
+      },
+      next: {
+        revalidate: 0
       }
     }
   );

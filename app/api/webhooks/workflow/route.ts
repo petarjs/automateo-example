@@ -23,33 +23,25 @@ type WorkflowWebhook = {
 };
 
 export async function POST(request: Request) {
-  try {
-    const payload = (await request.json()) as WorkflowWebhook;
+  const payload = (await request.json()) as WorkflowWebhook;
 
-    const idea = await getIdeaByWorkflowExecutionId(
-      payload.workflow_execution_id
-    );
+  const idea = await getIdeaByWorkflowExecutionId(
+    payload.workflow_execution_id
+  );
 
-    console.log('got idea', { idea });
+  console.log('got idea', { idea });
 
-    if (!idea) {
-      console.log('idea not found', {
-        workflowExecutionId: payload.workflow_execution_id
-      });
-
-      return new Response(`Idea not found`, { status: 200 });
-    }
-
-    await updateIdea(idea.id, {
-      idea_analysis: JSON.stringify(payload.output)
+  if (!idea) {
+    console.log('idea not found', {
+      workflowExecutionId: payload.workflow_execution_id
     });
-  } catch (error) {
-    console.log('webhook error', { error });
 
-    return new Response(`Webhook error`, {
-      status: 400
-    });
+    return new Response(`Idea not found`, { status: 200 });
   }
+
+  await updateIdea(idea.id, {
+    idea_analysis: JSON.stringify(payload.output)
+  });
 
   return new Response('Success!', {
     status: 200
