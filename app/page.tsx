@@ -1,6 +1,8 @@
 import { auth } from '@/lib/auth';
 import { IdeaInput } from './idea-input';
 
+export const dynamic = 'force-dynamic';
+
 export default async function IndexPage() {
   const session = await auth();
 

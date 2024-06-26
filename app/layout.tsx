@@ -7,6 +7,8 @@ import Link from 'next/link';
 import { Nav } from './nav';
 import { User } from './user';
 
+export const dynamic = 'force-dynamic';
+
 export const metadata = {
   title: 'Public Directory of Startup Ideas - Automateo Example',
   description:

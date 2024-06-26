@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic';
+
 import { getIdea } from '@/lib/db';
 import { redirect } from 'next/navigation';
 
